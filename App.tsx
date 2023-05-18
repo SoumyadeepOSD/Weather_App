@@ -2,31 +2,30 @@
 /* eslint-disable comma-dangle */
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/react-in-jsx-scope */
-import {View, Text,TextInput,Image,PermissionsAndroid,TouchableOpacity} from 'react-native';
+import { AppRegistry } from 'react-native';
 import axios from 'axios';
 import { useState } from 'react';
+import {View, Text,TextInput,Image} from 'react-native';
 import {STYLE, SIZE} from './Styles';
-import { Calender,Windy,Direction,Location,Cloudy, Rain, Storm,Haze, Sun, SunnyRain,Humidity,Pressure,Temp,Weather} from './Icons';
-import Geolocation from 'react-native-geolocation-service';
+import {name as appName} from './app.json';
+import {Cloudy,Sun,SunnyRain,Haze,Location,Humidity,Pressure,Temp,Direction,Weather,Windy} from './Icons';
+const KelvinToCel = k => (k - 273.15).toFixed(2);
 
-const KelvinToCel = (k) => {
-  return (k - 273.15).toFixed(2);
-}
 
+
+AppRegistry.registerComponent(appName,()=>App);
 const App = () => {
-  const [text, onChangeText] = useState('');
-  const [location, setLocation] = useState(false);
-  const [data, setData] = useState({
-    main: '',
-    clouds: '',
-    weather: '',
-    wind: '',
-    sys: '',
-  });
-  const API_KEY = '30a63e98205d057a90a80cf57295f5ac';
-  const URL = `https://api.openweathermap.org/data/2.5/weather?q=${text}&appid=${API_KEY}`;
-
-  const getUser = async() => {
+  const [city, onChangeCity] = useState('');
+    const [data, setData] = useState({
+        main: '',
+        clouds: '',
+        weather: '',
+        wind: '',
+        sys: '',
+    });
+    const GetData = async() => {  
+    const API_KEY = '30a63e98205d057a90a80cf57295f5ac';
+    const URL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`;
     try {
       const response = await axios.get(URL);
       const clouds = response.data.clouds.all;
@@ -35,38 +34,27 @@ const App = () => {
       const winds = response.data.wind;
       const sys = response.data.sys;
       console.log(clouds.all);
-      
-      
       setData({...data, main: main, clouds: clouds, weather: weather, wind: winds, sys: sys});
     } catch (error) {
       console.error(error);
     }
-  }
+  };
   return(
-  <View style=
-  // eslint-disable-next-line react-native/no-inline-styles
-  {{
-    backgroundColor:'#33485C',
-  }}>
+  <View style={{backgroundColor:'#33485C'}}>
      <TextInput
-        style=
-        // eslint-disable-next-line react-native/no-inline-styles
-       {
-        STYLE.container
-       }
-        onChangeText={onChangeText}
-        value={text}
+        style={STYLE.container}
+        onChangeText={onChangeCity}
+        value={city}
         placeholder="Enter the City"
         keyboardType="default"
-        onSubmitEditing={getUser}
+        onSubmitEditing={GetData}
       />
-
       {data.main.temp
       ?(
         <View>
         <View style={{display:'flex', flexDirection:'row', alignItems:'center',justifyContent:'center'}}>
         <Image source={Location} style={{height:30, width:30, resizeMode:'contain',tintColor:'white'}}/>
-        <Text style={{color:'white', fontSize:SIZE.large, textAlign:'center', marginTop:10}}>{text}</Text>
+        <Text style={{color:'white', fontSize:SIZE.large, textAlign:'center', marginTop:10}}>{city}</Text>
         <Text style={{color:'white', fontSize:SIZE.large, textAlign:'center', marginTop:10}}> {data.sys.country}</Text>
       </View>
     <Image
