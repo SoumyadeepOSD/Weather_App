@@ -22,7 +22,13 @@ const STYLE = StyleSheet.create({
         height:150,
         width:150,
         alignSelf:'center'
-    }
+    },
+    ParameterValue:{
+        color: 'white',
+        fontSize: SIZE.medium,
+        textAlign: 'center',
+        marginTop: 10,
+    },
 });
 
 export {STYLE, SIZE};
